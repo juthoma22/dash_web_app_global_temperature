@@ -22,6 +22,7 @@ layout = dict(
 )
 
 app = dash.Dash("Gloabal Temperature")
+server = app.server
 
 app.layout = html.Div(
     children=[
