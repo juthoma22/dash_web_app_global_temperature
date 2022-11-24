@@ -21,6 +21,14 @@ class DataHandler:
         return df_global_temperatures_country
 
     def read_files(self, second_try=False):
+        """
+        read_files(self, second_try) -> (pd.df, [str], [str])
+
+        Reading file in the path, stored in self.path, if not existant download them from self.url using the kaggle API.
+        Returning a pandas dataframe as well as a list of years and a list of countries in that dataframe.
+
+        second_try -- Wether or not it's being called the second time, used to try twice when kaggle API times out -> Bool
+        """
         try:
             df_country = self.open_files()
 
@@ -63,7 +71,7 @@ class DataHandler:
         # Extract the years from df['dt']
         years = np.unique(df_country["dt"].apply(lambda x: x[:4]))
 
-        # Extract the countries from df
+        # Extract the countries from df['Country']
         countries = df_country["Country"].unique()
 
         return df_country, years, countries

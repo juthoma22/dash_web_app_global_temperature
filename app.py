@@ -1,10 +1,10 @@
 import dash
-
 from dash.dependencies import Input, Output
 from dash import dcc
 from dash import html
 
 import data_handler as dh
+
 
 DataHandler = dh.DataHandler()
 
@@ -22,8 +22,11 @@ layout = dict(
 )
 
 app = dash.Dash("Gloabal Temperature")
+
+# server called in Dockerfile
 server = app.server
 
+# HTML Layout of the web app
 app.layout = html.Div(
     children=[
         html.H1(children="Average Temperature per year in each country"),
@@ -50,14 +53,23 @@ app.layout = html.Div(
 
 @app.callback(Output("average-temp-year", "figure"), Input("year-slider", "value"))
 def update_graph(year):
-    # changing dt to just the years
+    """
+    update_graph(year) -> Dict
+
+    Calculating the mean temperature for each country for a given year.
+    Returning the data and layout for a graph based on the year
+
+    year -- The year to calculate the temperatures for -> Int
+    """
+    # changing the timestamp ('dt') to just the years
     dff = df_country[df_country["dt"].apply(lambda x: x[:4]) == str(year)]
 
+    # calculating the mean temperature per year for each country
     mean_temp = []
     for country in countries:
         mean_temp.append(dff[dff["Country"] == country]["AverageTemperature"].mean())
 
-    # using the calculated mean temperature for each country
+    # creating a graph of a map, using the calculated mean temperature for each country
     data = [
         dict(
             type="choropleth",
